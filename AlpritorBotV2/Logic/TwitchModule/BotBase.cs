@@ -30,14 +30,16 @@ namespace AlpritorBotV2.TwitchModule
     {
         public static TwitchClient? Client { get; private set; }
         public static JoinedChannel? Channel { get; set; }
+        public static bool isJoined;
         private static bool _isModerator;
-        private static bool _isJoined;
         private static readonly TwitchAPI _api;
         private static readonly string _botUsername;
         private static readonly string _accessToken;
-        private static readonly Dictionary<string, Func<string[], Task>> _commands = new() { { "checkMod", new Func<string[], Task>(async (arg) => CheckMod(arg)) }, { "uptime", new Func<string[], Task>(async (arg) => await Uptime(arg)) }, { "updateInfo", new Func<string[], Task>(async (arg) => await UpdateInfo(arg)) } };
+        private static readonly Dictionary<string, Func<OnChatCommandReceivedArgs, Task>> _commands = new() { { "checkMod", new(async (arg) => CheckMod(arg)) }, { "uptime", new (async (arg) => await Uptime(arg)) }, { "updateInfo", new(async (arg) => await UpdateInfo(arg)) } };
 
+        public static CultureInfo? CurrentCulture { get; private set; }
         private static string? _userAccessToken;
+        public static bool IsUserAccessTokenSet { get { return !string.IsNullOrWhiteSpace(_userAccessToken); }}
         static BotBase()
         {
             _botUsername = ConfigurationManager.AppSettings["botUsername"]!;
@@ -47,14 +49,24 @@ namespace AlpritorBotV2.TwitchModule
             _api.Settings.AccessToken = _accessToken;
         }
 
-        public static void Initialize(string channelName)
+        public static void Initialize(string? culture)
         {
+            if(culture == null)
+            {
+                CurrentCulture = new CultureInfo("en-GB");
+            }
+            else
+            {
+                CurrentCulture = new CultureInfo(culture);
+            }
+
             ConnectionCredentials credentials = new(_botUsername, _accessToken);
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 750,
                 ThrottlingPeriod = TimeSpan.FromSeconds(30)
             };
+
             WebSocketClient customClient = new(clientOptions);
             Client = new TwitchClient(customClient);
 
@@ -63,17 +75,9 @@ namespace AlpritorBotV2.TwitchModule
             Client.OnMessageSent += Client_OnMessageSent;
             Client.OnChatCommandReceived += Client_OnChatCommandReceived;
 
-            Client.Initialize(credentials, channelName);
+            Client.Initialize(credentials);
 
-            if (!Client.IsConnected)
-            {
-                Client.Connect();
-
-            }
-
-            Client.JoinChannel(channelName);
-
-
+            Client.Connect();
             //незапуск если бот не подключился к каналу = сделать ожидание на прок эвента
         }
 
@@ -83,7 +87,7 @@ namespace AlpritorBotV2.TwitchModule
             {
                 if (_commands.ContainsKey(e.Command.CommandText))
                 {
-                    await _commands.GetValueOrDefault(e.Command.CommandText)!(e.Command.ArgumentsAsList.ToArray());
+                    await _commands.GetValueOrDefault(e.Command.CommandText)!(e);
                 }
                 else
                 {
@@ -101,17 +105,18 @@ namespace AlpritorBotV2.TwitchModule
         {
             if (e.SentMessage.Message.Contains(".mods"))
             {
-                if (e.SentMessage.DisplayName.ToLower().Contains("alpritor_bot"))
-                {
-                    if (e.SentMessage.IsModerator)
-                    {
-                        _isModerator = true;
-                    }
-                    else
-                    {
-                        Client!.SendMessage(Channel, ResourcesLocal.GiveMeModeMsg);
-                    }
-                }
+                //mod give pls msg
+                //if (e.SentMessage.DisplayName.ToLower().Contains("alpritor_bot"))
+                //{
+                //    if (e.SentMessage.IsModerator)
+                //    {
+                //        _isModerator = true;
+                //    }
+                //    else
+                //    {
+                //        Client!.SendMessage(Channel, ResourcesLocal.ResourceManager.GetString("GiveMeModeMsg", CurrentCulture));
+                //    }
+                //}
             }
             else
             {
@@ -122,13 +127,14 @@ namespace AlpritorBotV2.TwitchModule
         private static void Client_OnMessageReceived(object? sender, OnMessageReceivedArgs e)
         {
             //MessageBox.Show(e.ChatMessage.Message);
+            ResourcesLocal.ResourceManager.GetString("", CurrentCulture);
         }
 
         private static void Client_OnJoinedChannel(object? sender, OnJoinedChannelArgs e)
         {
-            _isJoined = true;
+            isJoined = true;
             Channel = new JoinedChannel(e.Channel);
-            Client!.SendMessage(e.Channel, ResourcesLocal.HelloMsg);
+            Client!.SendMessage(e.Channel, ResourcesLocal.ResourceManager.GetString("HelloMsg", CurrentCulture));
 
             Client.GetChannelModerators(e.Channel);
         }
@@ -136,6 +142,21 @@ namespace AlpritorBotV2.TwitchModule
         public static void SetUserAccessToken(string token)
         {
             _userAccessToken = token;
+        }
+
+        public static void JoinChannel(string newChannel)
+        {
+            if(string.IsNullOrWhiteSpace(newChannel))
+            {
+                return;
+            }
+            if(Channel != null)
+            {
+                Client!.LeaveChannel(Channel);
+                Channel = null;
+                isJoined = false;
+            }
+            Client!.JoinChannel(newChannel);
         }
 
         private async static Task<Stream> GetCurrentStream()
@@ -160,7 +181,14 @@ namespace AlpritorBotV2.TwitchModule
             return user!;
         }
 
-        private static void CheckMod(string[] args)
+        public static void CheckMod(string[] args)
+        {
+            if (!_isModerator)
+            {
+                Client!.SendMessage(Channel, ".mods");
+            }
+        }
+        public static void ChangeBotLocale(string[] args)
         {
             if (!_isModerator)
             {
@@ -168,34 +196,35 @@ namespace AlpritorBotV2.TwitchModule
             }
         }
 
-        private async static Task Uptime(string[] args)
+        public async static Task Uptime(OnChatCommandReceivedArgs e)
         {
             var stream = await GetCurrentStream();
             if (stream != null)
             {
                 var tmpTime = (DateTime.UtcNow - stream.StartedAt).ToString("hh\\:mm\\:ss");
-                Client!.SendMessage(Channel, $"{ResourcesLocal.Uptime}: {tmpTime}");
+                Client!.SendMessage(Channel, $"{ResourcesLocal.ResourceManager.GetString("Uptime", CurrentCulture)}: {tmpTime}");
             }
             else
             {
-                Client!.SendMessage(Channel, $"{ResourcesLocal.UptimeFail}");
+                Client!.SendMessage(Channel, $"{ResourcesLocal.ResourceManager.GetString("UptimeFail", CurrentCulture)}");
             }
         }
 
-        private async static Task UpdateInfo(string[] args)
+        public async static Task UpdateInfo(OnChatCommandReceivedArgs e)
         {
             if (_userAccessToken == null)
             {
                 Client!.SendMessage(Channel, $"Access token didnt assigned to bot :(");//CHANGE TO LOCALES
                 return;
             }
+            string[] args = e.Command.ArgumentsAsList.ToArray();
             string gameId = string.Empty;
             string gameName = string.Empty;
             if (args.Length > 1)
             {
                 gameName = args[1].Replace('_', ' ');
                 GetGamesResponse games = await _api.Helix.Games.GetGamesAsync(gameNames: new List<string>() { gameName });
-                if (games.Games.Count() > 0)
+                if (games.Games.Length > 0)
                 {
                     gameId = games.Games.First().Id;
                 }
@@ -215,6 +244,34 @@ namespace AlpritorBotV2.TwitchModule
             }
 
 
+        }
+        public static void SendMsg(string message)
+        {
+            Client!.SendMessage(Channel, message);
+        }
+
+        public static void ChangeCulture(string culture)
+        {
+            if(string.IsNullOrWhiteSpace(culture))
+            {
+                return;
+            }
+
+            try
+            {
+                CurrentCulture = new CultureInfo(culture);
+            }
+            catch (Exception) { }
+        }
+
+        public static void BanUser(OnChatCommandReceivedArgs e)
+        {
+            if(e.Command.ChatMessage.IsModerator || e.Command.ChatMessage.IsBroadcaster)
+            {
+                string[] args = e.Command.ArgumentsAsList.ToArray();
+                Client.BanUser(Channel, args[0], args[1] == null ? $"Banned from bot by {e.Command.ChatMessage.Username}." : args[1]);//locale
+            }
+           
         }
     }
 

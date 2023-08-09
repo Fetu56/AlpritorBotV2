@@ -21,7 +21,7 @@ namespace AlpritorBotV2.ListenerModule
             _server.Start();
 
             await Task.Run(() => {
-                Process browserStartProccess = new Process();
+                Process browserStartProccess = new();
                 browserStartProccess.StartInfo.UseShellExecute = true;
                 browserStartProccess.StartInfo.FileName = $"https://id.twitch.tv/oauth2/authorize?response_type=token&client_id={ConfigurationManager.AppSettings["clientId"]!}&redirect_uri=http://localhost:3001&scope=channel:read:redemptions+channel:manage:broadcast+channel:manage:redemptions+channel:manage:polls+channel:manage:predictions+channel:read:polls+channel:read:predictions+channel:manage:raids+channel:read:vips+channel:manage:vips";
                 browserStartProccess.Start();

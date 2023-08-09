@@ -43,8 +43,8 @@ namespace AlpritorBotV2.CryptModule
 
         private static byte[] Transform(byte[] buffer, ICryptoTransform transform)
         {
-            MemoryStream stream = new MemoryStream();
-            using (CryptoStream cs = new CryptoStream(stream, transform, CryptoStreamMode.Write))
+            MemoryStream stream = new();
+            using (CryptoStream cs = new(stream, transform, CryptoStreamMode.Write))
             {
                 cs.Write(buffer, 0, buffer.Length);
             }

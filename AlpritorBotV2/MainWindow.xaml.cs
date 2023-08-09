@@ -1,30 +1,36 @@
-﻿using AlpritorBotV2.ListenerModule;
+﻿using AlpritorBotV2.CryptModule;
+using AlpritorBotV2.ListenerModule;
 using AlpritorBotV2.TwitchModule;
+using AlpritorBotV2.Windows.Culture;
+using AlpritorBotV2.Windows.InputBox;
 using System.Globalization;
+using System.Printing;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 
 namespace AlpritorBotV2
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            Windows.Culture.ChooseCulture culture = new();
-            culture.ShowDialog();
+            //var ts = CryptAES.Encrypt("");
+            var pairCultureWindow = new ChooseCulture().ShowDialog();
 
-            if(culture.SelectedCulture!=null && !string.IsNullOrEmpty(culture.ChannelName))
+            if (pairCultureWindow!.First != null)
             {
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(culture.SelectedCulture.CultureName);
-                //MessageBox.Show(Localization.Bot.Resources.CurrentLocale);
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(pairCultureWindow!.First.CultureName);
+            }
 
-                BotBase.Initialize(culture.ChannelName);
-
-                //MessageBox.Show(Localization.Bot.Resources.GiveMeModeMsg);
-                //MessageBox.Show(Localization.Bot.Resources.HelloMsg);
+            if (string.IsNullOrWhiteSpace(pairCultureWindow!.Second))
+            {
+                BotBase.Initialize(pairCultureWindow!.First?.CultureName);
+            }
+            else
+            {
+                BotBase.Initialize(pairCultureWindow!.First?.CultureName);
+                BotBase.JoinChannel(pairCultureWindow!.Second);
             }
 
             InitializeComponent();
@@ -36,6 +42,15 @@ namespace AlpritorBotV2
             try
             {
                 BotBase.SetUserAccessToken(await TokenListener.GetAccessToken());
+                if (BotBase.IsUserAccessTokenSet)
+                {
+                    ButtonGetToken.Foreground = Brushes.Green;
+                }
+                else
+                {
+                    ButtonGetToken.Foreground = Brushes.Red;
+                    ButtonGetToken.IsEnabled = true;
+                }
             }
             catch (System.Exception ex)
             {
@@ -43,6 +58,32 @@ namespace AlpritorBotV2
                 ButtonGetToken.IsEnabled = true;
                 MessageBox.Show(ex.Message, "ERROR");//locale AND BUTTON TEXT TOO
             }
+        }
+
+        private void ButtonUptime_Click(object sender, RoutedEventArgs e)
+        {
+            if (BotBase.isJoined)
+            {
+                BotBase.Uptime(null);
+            }
+        }
+
+        private void ButtonSendMsg_Click(object sender, RoutedEventArgs e)
+        {
+            if (BotBase.isJoined)
+            {
+                BotBase.SendMsg(new InputBoxWindow("Enter text:").ShowDialog());//locale
+            }
+        }
+
+        private void ButtonChangeChannel_Click(object sender, RoutedEventArgs e)
+        {
+            BotBase.JoinChannel(new InputBoxWindow("Channel name:").ShowDialog());//locale
+        }
+
+        private void ButtonChangeLanguage_Click(object sender, RoutedEventArgs e)
+        {
+            BotBase.ChangeCulture(new InputBoxWindow("New culture:").ShowDialog());//locale
         }
     }
 }

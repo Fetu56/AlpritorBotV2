@@ -1,4 +1,5 @@
-﻿using AlpritorBotV2.LogModule;
+﻿using AlpritorBotV2.Logic.ClassesModule;
+using AlpritorBotV2.LogModule;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,8 +22,8 @@ namespace AlpritorBotV2.Windows.Culture
     /// </summary>
     public partial class ChooseCulture : Window
     {
-        public List<CultureInfo> CultureList { get; set; } = CultureInfo.GetSupportedCultures();
-        public CultureInfo? SelectedCulture;
+        public List<CultureProps> CultureList { get; set; } = CultureProps.GetSupportedCultures();
+        public CultureProps? SelectedCulture;
         public string? ChannelName;
         public ChooseCulture()
         {
@@ -41,29 +42,35 @@ namespace AlpritorBotV2.Windows.Culture
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(CultureBox.SelectedItem == null)
-            {
-                HightLightRed(CultureBox);
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(ChannelTextBox.Text))
-            {
-                HightLightRed(ChannelTextBox);
-                return;
-            }
-            SelectedCulture = (CultureInfo)CultureBox.SelectedItem;
+            //if(CultureBox.SelectedItem == null)
+            //{
+            //    HightLightRed(CultureBox);
+            //    return;
+            //}
+            //if (string.IsNullOrWhiteSpace(ChannelTextBox.Text))
+            //{
+            //    HightLightRed(ChannelTextBox);
+            //    return;
+            //}
+            SelectedCulture = (CultureProps)CultureBox.SelectedItem;
             ChannelName = ChannelTextBox.Text;
             Close();
         }
 
-        private void HightLightRed(Control control)
-        {
-            control.BorderBrush = Brushes.Red;
-        }
+        //private void HightLightRed(Control control)
+        //{
+        //    control.BorderBrush = Brushes.Red;
+        //}
 
         private void Start_Settings_Closed(object sender, EventArgs e)
         {
             SimpleLogger.WriteToLog($"Closed with: culture - \"{SelectedCulture}\", channel - \"{ChannelName}\"", "ChooseCulture Window");
+        }
+
+        public new Pair<CultureProps?, string?>? ShowDialog()
+        {
+            base.ShowDialog();
+            return new Pair<CultureProps?, string?>(SelectedCulture, ChannelName);
         }
     }
 }
