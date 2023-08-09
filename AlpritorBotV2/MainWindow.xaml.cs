@@ -1,21 +1,8 @@
-﻿using AlpritorBotV2.TwitchModule;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using AlpritorBotV2.ListenerModule;
+using AlpritorBotV2.TwitchModule;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AlpritorBotV2
 {
@@ -26,7 +13,6 @@ namespace AlpritorBotV2
     {
         public MainWindow()
         {
-
             Windows.Culture.ChooseCulture culture = new();
             culture.ShowDialog();
 
@@ -41,11 +27,22 @@ namespace AlpritorBotV2
                 //MessageBox.Show(Localization.Bot.Resources.HelloMsg);
             }
 
-
-
-
-
             InitializeComponent();
+        }
+
+        private async void ButtonGetToken_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonGetToken.IsEnabled = false;
+            try
+            {
+                BotBase.SetUserAccessToken(await TokenListener.GetAccessToken());
+            }
+            catch (System.Exception ex)
+            {
+
+                ButtonGetToken.IsEnabled = true;
+                MessageBox.Show(ex.Message, "ERROR");//locale AND BUTTON TEXT TOO
+            }
         }
     }
 }

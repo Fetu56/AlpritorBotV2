@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlpritorBotV2.LogModule;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace AlpritorBotV2.Windows.Culture
     /// </summary>
     public partial class ChooseCulture : Window
     {
-        public List<CulturesContainer> CultureList { get; set; } = CulturesContainer.GetSupportedCultures();
-        public CulturesContainer? SelectedCulture;
+        public List<CultureInfo> CultureList { get; set; } = CultureInfo.GetSupportedCultures();
+        public CultureInfo? SelectedCulture;
         public string? ChannelName;
         public ChooseCulture()
         {
@@ -50,14 +51,19 @@ namespace AlpritorBotV2.Windows.Culture
                 HightLightRed(ChannelTextBox);
                 return;
             }
-            SelectedCulture = (CulturesContainer)CultureBox.SelectedItem;
+            SelectedCulture = (CultureInfo)CultureBox.SelectedItem;
             ChannelName = ChannelTextBox.Text;
-            this.Close();
+            Close();
         }
 
         private void HightLightRed(Control control)
         {
             control.BorderBrush = Brushes.Red;
+        }
+
+        private void Start_Settings_Closed(object sender, EventArgs e)
+        {
+            SimpleLogger.WriteToLog($"Closed with: culture - \"{SelectedCulture}\", channel - \"{ChannelName}\"", "ChooseCulture Window");
         }
     }
 }

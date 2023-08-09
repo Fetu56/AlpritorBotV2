@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AlpritorBotV2.Localization.Bot {
+namespace AlpritorBotV2.Localization.WPFclient {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace AlpritorBotV2.Localization.Bot {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class ResourcesClient {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal ResourcesClient() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace AlpritorBotV2.Localization.Bot {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AlpritorBotV2.Localization.Bot.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AlpritorBotV2.Localization.WPFclient.ResourcesClient", typeof(ResourcesClient).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,51 +57,6 @@ namespace AlpritorBotV2.Localization.Bot {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to English.
-        /// </summary>
-        internal static string CurrentLocale {
-            get {
-                return ResourceManager.GetString("CurrentLocale", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to To unlock more features of bot, /mod me please :3.
-        /// </summary>
-        internal static string GiveMeModeMsg {
-            get {
-                return ResourceManager.GetString("GiveMeModeMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hello world!.
-        /// </summary>
-        internal static string HelloMsg {
-            get {
-                return ResourceManager.GetString("HelloMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stream uptime.
-        /// </summary>
-        internal static string Uptime {
-            get {
-                return ResourceManager.GetString("Uptime", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stream offline.
-        /// </summary>
-        internal static string UptimeFail {
-            get {
-                return ResourceManager.GetString("UptimeFail", resourceCulture);
             }
         }
     }

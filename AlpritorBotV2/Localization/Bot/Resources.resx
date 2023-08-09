@@ -126,4 +126,10 @@
   <data name="HelloMsg" xml:space="preserve">
     <value>Hello world!</value>
   </data>
+  <data name="Uptime" xml:space="preserve">
+    <value>Stream uptime</value>
+  </data>
+  <data name="UptimeFail" xml:space="preserve">
+    <value>Stream offline</value>
+  </data>
 </root>

@@ -126,4 +126,10 @@
   <data name="HelloMsg" xml:space="preserve">
     <value>Всем привет!</value>
   </data>
+  <data name="Uptime" xml:space="preserve">
+    <value>Стрим идёт</value>
+  </data>
+  <data name="UptimeFail" xml:space="preserve">
+    <value>Стрим выключен</value>
+  </data>
 </root>
