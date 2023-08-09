@@ -126,6 +126,15 @@
   <data name="HelloMsg" xml:space="preserve">
     <value>Усiх вiтаю!</value>
   </data>
+  <data name="NewGame" xml:space="preserve">
+    <value>Нова гра:</value>
+  </data>
+  <data name="NewName" xml:space="preserve">
+    <value>Нова назва стриму:</value>
+  </data>
+  <data name="NoAccToken" xml:space="preserve">
+    <value>У бота нема токена стримера :(</value>
+  </data>
   <data name="Uptime" xml:space="preserve">
     <value>Етер йде</value>
   </data>

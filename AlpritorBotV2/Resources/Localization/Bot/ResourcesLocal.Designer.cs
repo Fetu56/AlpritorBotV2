@@ -88,6 +88,33 @@ namespace AlpritorBotV2.Resources.Localization.Bot {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New game:.
+        /// </summary>
+        internal static string NewGame {
+            get {
+                return ResourceManager.GetString("NewGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New stream name:.
+        /// </summary>
+        internal static string NewName {
+            get {
+                return ResourceManager.GetString("NewName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access token didnt assigned to bot :(.
+        /// </summary>
+        internal static string NoAccToken {
+            get {
+                return ResourceManager.GetString("NoAccToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream uptime.
         /// </summary>
         internal static string Uptime {
