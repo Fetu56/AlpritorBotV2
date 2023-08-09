@@ -11,7 +11,7 @@ namespace AlpritorBotV2.LogModule
         public static void WriteToLog(string message, string actor="None")
         {
             CheckIsFilesCreated();
-            File.AppendAllText(PathToLog, $"{DateTime.Now} - {actor} - {message}");
+            File.AppendAllText(PathToLog, $"[{DateTime.Now}] ({actor}): {message}\n");
         }
         private static void CheckIsFilesCreated()
         {

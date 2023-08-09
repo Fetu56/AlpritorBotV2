@@ -14,26 +14,35 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localization\Bot\Resources.Designer.cs">
+    <Compile Update="Resources\Localization\Bot\ResourcesLocal.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>ResourcesLocal.resx</DependentUpon>
     </Compile>
-    <Compile Update="Localization\WPFclient\ResourcesClient.Designer.cs">
+    <Compile Update="Resources\Localization\WPFclient\ResourcesClient.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ResourcesClient.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\ResourceHtml.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResourceHtml.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localization\Bot\Resources.resx">
+    <EmbeddedResource Update="Resources\Localization\Bot\ResourcesLocal.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>ResourcesLocal.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Localization\WPFclient\ResourcesClient.resx">
+    <EmbeddedResource Update="Resources\Localization\WPFclient\ResourcesClient.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourcesClient.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ResourceHtml.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourceHtml.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

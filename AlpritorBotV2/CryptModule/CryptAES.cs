@@ -8,8 +8,8 @@ namespace AlpritorBotV2.CryptModule
 {
     static class CryptAES
     {
-        private static ICryptoTransform _encryptor, _decryptor;
-        private static UTF8Encoding _encoder;
+        private static readonly ICryptoTransform _encryptor, _decryptor;
+        private static readonly UTF8Encoding _encoder;
         private static readonly byte[] _key = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings["KeyAES"]!);
         private static readonly byte[] _iv = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings["IVAES"]!);
 

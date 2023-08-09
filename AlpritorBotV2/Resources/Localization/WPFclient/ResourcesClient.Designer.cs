@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AlpritorBotV2.Localization.WPFclient {
+namespace AlpritorBotV2.Resources.Localization.WPFclient {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace AlpritorBotV2.Localization.WPFclient {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AlpritorBotV2.Localization.WPFclient.ResourcesClient", typeof(ResourcesClient).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AlpritorBotV2.Resources.Localization.WPFclient.ResourcesClient", typeof(ResourcesClient).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

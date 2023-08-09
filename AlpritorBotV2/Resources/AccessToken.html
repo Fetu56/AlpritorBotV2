@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+            <html>
+                <head>
+                    <meta charset='utf8'>
+                    <title>REDIRECT</title>
+                </head>
+                <body>
+                    <h1 id="p"></h1>
+                    <script> 
+                        if(window.location.href.includes("#"))
+                        {
+                             let tempUrl = window.location.href.replace("#", "?")
+                             window.location.replace(tempUrl)
+                        }
+                        else 
+                        {
+                            var paragraph = document.getElementById("p");
+                            var text = document.createTextNode("You can close tab now!");
+
+                            paragraph.appendChild(text);
+                            console.log("Nothing to redirect, good!")
+                        }
+                    </script>
+                </body>
+            </html>

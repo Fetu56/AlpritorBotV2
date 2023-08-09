@@ -1,6 +1,5 @@
 ﻿using AlpritorBotV2.CryptModule;
-using AlpritorBotV2.Localization;
-using AlpritorBotV2.Localization.Bot;
+using AlpritorBotV2.Resources.Localization.Bot;
 using AlpritorBotV2.LogModule;
 using System;
 using System.Collections.Generic;
@@ -31,14 +30,14 @@ namespace AlpritorBotV2.TwitchModule
     {
         public static TwitchClient? Client { get; private set; }
         public static JoinedChannel? Channel { get; set; }
-        private static TwitchAPI _api;
         private static bool _isModerator;
         private static bool _isJoined;
+        private static readonly TwitchAPI _api;
         private static readonly string _botUsername;
         private static readonly string _accessToken;
         private static readonly Dictionary<string, Func<string[], Task>> _commands = new() { { "checkMod", new Func<string[], Task>(async (arg) => CheckMod(arg)) }, { "uptime", new Func<string[], Task>(async (arg) => await Uptime(arg)) }, { "updateInfo", new Func<string[], Task>(async (arg) => await UpdateInfo(arg)) } };
 
-        private static string _userAccessToken;
+        private static string? _userAccessToken;
         static BotBase()
         {
             _botUsername = ConfigurationManager.AppSettings["botUsername"]!;
@@ -50,13 +49,13 @@ namespace AlpritorBotV2.TwitchModule
 
         public static void Initialize(string channelName)
         {
-            ConnectionCredentials credentials = new ConnectionCredentials(_botUsername, _accessToken);
+            ConnectionCredentials credentials = new(_botUsername, _accessToken);
             var clientOptions = new ClientOptions
             {
                 MessagesAllowedInPeriod = 750,
                 ThrottlingPeriod = TimeSpan.FromSeconds(30)
             };
-            WebSocketClient customClient = new WebSocketClient(clientOptions);
+            WebSocketClient customClient = new(clientOptions);
             Client = new TwitchClient(customClient);
 
             Client.OnJoinedChannel += Client_OnJoinedChannel;
@@ -110,7 +109,7 @@ namespace AlpritorBotV2.TwitchModule
                     }
                     else
                     {
-                        Client!.SendMessage(Channel, Resources.GiveMeModeMsg);
+                        Client!.SendMessage(Channel, ResourcesLocal.GiveMeModeMsg);
                     }
                 }
             }
@@ -129,7 +128,7 @@ namespace AlpritorBotV2.TwitchModule
         {
             _isJoined = true;
             Channel = new JoinedChannel(e.Channel);
-            Client!.SendMessage(e.Channel, Resources.HelloMsg);
+            Client!.SendMessage(e.Channel, ResourcesLocal.HelloMsg);
 
             Client.GetChannelModerators(e.Channel);
         }
@@ -141,24 +140,24 @@ namespace AlpritorBotV2.TwitchModule
 
         private async static Task<Stream> GetCurrentStream()
         {
-            Stream stream = null;
-            var streams = await _api.Helix.Streams.GetStreamsAsync(userLogins: new List<string> { Channel.Channel });
-            if (streams.Streams.Count() > 0)
+            Stream? stream = null;
+            var streams = await _api.Helix.Streams.GetStreamsAsync(userLogins: new List<string> { Channel!.Channel });
+            if (streams.Streams.Length > 0)
             {
                 stream = streams.Streams.First();
             }
-            return stream;
+            return stream!;
         }
 
         private async static Task<User> GetCurrentUser()
         {
-            User user = null;
-            var users = await _api.Helix.Users.GetUsersAsync(logins: new List<string> { Channel.Channel });
-            if (users.Users.Count() > 0)
+            User? user = null;
+            var users = await _api.Helix.Users.GetUsersAsync(logins: new List<string> { Channel!.Channel });
+            if (users.Users.Length > 0)
             {
                 user = users.Users.First();
             }
-            return user;
+            return user!;
         }
 
         private static void CheckMod(string[] args)
@@ -175,11 +174,11 @@ namespace AlpritorBotV2.TwitchModule
             if (stream != null)
             {
                 var tmpTime = (DateTime.UtcNow - stream.StartedAt).ToString("hh\\:mm\\:ss");
-                Client!.SendMessage(Channel, $"{Resources.Uptime}: {tmpTime}");
+                Client!.SendMessage(Channel, $"{ResourcesLocal.Uptime}: {tmpTime}");
             }
             else
             {
-                Client!.SendMessage(Channel, $"{Resources.UptimeFail}");
+                Client!.SendMessage(Channel, $"{ResourcesLocal.UptimeFail}");
             }
         }
 
